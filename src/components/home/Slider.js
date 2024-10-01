@@ -1,3 +1,4 @@
+
 const Slider = ({ sliders }) => {
   return (
     <div>

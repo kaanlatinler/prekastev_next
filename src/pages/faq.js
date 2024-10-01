@@ -3,6 +3,7 @@ import Script from "next/script";
 import api from "@/services/api";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const Subheader = dynamic(() => import("@/components/Subheader"), {
   loading: () => <p>Loading Subheader...</p>,
@@ -34,6 +35,7 @@ const More = dynamic(() => import("@/components/faq/More"), {
 });
 
 export default function Faq() {
+  const router = useRouter();
   const [faqs, setFaqs] = useState([]);
 
   useEffect(() => {
@@ -48,6 +50,23 @@ export default function Faq() {
 
     fetchFaqs();
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isFirstLoad = sessionStorage.getItem("isFirstLoad") !== "false";
+
+      if (isFirstLoad) {
+        sessionStorage.setItem("isFirstLoad", "false");
+
+        const timer = setTimeout(() => {
+          console.log("5 saniye oldu sayfa yenilendi");
+          router.reload();
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [router]);
 
   return (
     <>
@@ -83,7 +102,6 @@ export default function Faq() {
 
       {/* Script dosyalarını ekliyoruz */}
       <Script src="/assets/js/plugins.js" strategy="lazyOnload" />
-      <Script src="/assets/js/loader.js" strategy="lazyOnload" />
       <Script src="/assets/js/designesia.js" strategy="lazyOnload" />
       <Script src="/assets/js/menu.js" strategy="lazyOnload" />
       <Script

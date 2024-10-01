@@ -3,6 +3,7 @@ import Script from "next/script";
 import api from "@/services/api";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const Subheader = dynamic(() => import("@/components/Subheader"), {
   loading: () => <p>Loading Subheader...</p>,
@@ -13,6 +14,7 @@ const ServiceCard = dynamic(() => import("@/components/service/ServiceCard"), {
 });
 
 export default function Services() {
+  const router = useRouter();
   const [services, setServices] = useState([]);
 
   useEffect(() => {
@@ -27,6 +29,23 @@ export default function Services() {
 
     fetchServices();
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isFirstLoad = sessionStorage.getItem("isFirstLoad") !== "false";
+
+      if (!loading && isFirstLoad) {
+        sessionStorage.setItem("isFirstLoad", "false");
+
+        const timer = setTimeout(() => {
+          console.log("5 saniye oldu sayfa yenilendi");
+          router.reload();
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [loading, router]);
 
   return (
     <>

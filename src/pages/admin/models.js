@@ -1,35 +1,27 @@
 import Head from "next/head";
 import Script from "next/script";
-import api from "@/services/api";
-import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import api from "@/services/api";
+import ModelCard from "./components/model/ModelCard";
 
-const Subheader = dynamic(() => import("@/components/Subheader"), {
-  loading: () => <p>Loading Subheader...</p>,
-});
-
-const Form = dynamic(() => import("@/components/contact/Form"), {
-  loading: () => <p>Loading Form...</p>,
-});
-
-const Sidebar = dynamic(() => import("@/components/contact/Sidebar"), {
-  loading: () => <p>Loading Sidebar...</p>,
-});
-
-const Map = dynamic(() => import("@/components/contact/Map"), {
-  loading: () => <p>Loading Map...</p>,
-});
-
-export default function Contact() {
+export default function Models() {
   const router = useRouter();
+  const [token, setToken] = useState("");
   const [models, setModels] = useState([]);
 
   useEffect(() => {
+    const jwtToken = localStorage.getItem("token");
+    setToken(jwtToken);
+    if (!jwtToken) {
+      router.push("/admin/login");
+    }
+
     async function fetchModels() {
       try {
-        const response = await api.get("/portfoilos/getPortfoilos");
-        setModels(response.data.portfoilos);
+        const res = await api.get("/portfoilos/getPortfoilos");
+        setModels(res.data.portfoilos);
       } catch (error) {
         console.error(error);
       }
@@ -37,23 +29,6 @@ export default function Contact() {
 
     fetchModels();
   }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isFirstLoad = sessionStorage.getItem("isFirstLoad") !== "false";
-
-      if (isFirstLoad) {
-        sessionStorage.setItem("isFirstLoad", "false");
-
-        const timer = setTimeout(() => {
-          console.log("5 saniye oldu sayfa yenilendi");
-          router.reload();
-        }, 1000);
-
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [router]);
 
   return (
     <>
@@ -77,23 +52,33 @@ export default function Contact() {
         <meta name="author" content="" />
       </Head>
 
-      <Subheader title="İLETİŞİM" subtitle="" />
-
-      <div id="content" className="no-top">
-        <Map />
-        <div className="container">
-          <div className="row">
-            <Form models={models} />
-            <Sidebar />
+      <div className="m-5 p-5">
+        <section className="fullwidthbanner-container pt-5">
+          <div id="content" className="no-bottom no-top mt-5">
+            <div className="row mb-5">
+              <div className="col-lg-12">
+                <h1 className="text-center">Modeller</h1>
+              </div>
+            </div>
+            <div className="row mb-5">
+              <div className="col-lg-12">
+                <Link className="btn btn-primary" href="/admin/addModel">
+                  Model Ekle
+                </Link>
+              </div>
+            </div>
+            <div className="row row-cols-1 row-cols-md-2 g-4">
+              {models.map((model) => (
+                <ModelCard key={model.id} model={model} token={token} />
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
       </div>
 
       {/* Script dosyalarını ekliyoruz */}
       <Script src="/assets/js/plugins.js" strategy="lazyOnload" />
-      <Script src="/assets/js/loader.js" strategy="lazyOnload" />
       <Script src="/assets/js/designesia.js" strategy="lazyOnload" />
-      <Script src="/assets/js/menu.js" strategy="lazyOnload" />
       <Script
         src="/assets/rs-plugin/js/jquery.themepunch.plugins.min.js"
         strategy="lazyOnload"
@@ -102,8 +87,10 @@ export default function Contact() {
         src="/assets/rs-plugin/js/jquery.themepunch.revolution.min.js"
         strategy="lazyOnload"
       />
+
       <Script src="/assets/js/cookies.js" strategy="lazyOnload" />
       <Script src="/assets/js/rev-slider.js" strategy="lazyOnload" />
+      <Script src="/assets/js/menu.js" strategy="lazyOnload" />
     </>
   );
 }

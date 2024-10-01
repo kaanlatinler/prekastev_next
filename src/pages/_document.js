@@ -1,9 +1,8 @@
-// pages/_document.js
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
-    <Html>
+    <Html lang="tr">
       <Head>
         <link
           href="/assets/css/bootstrap.min.css"
@@ -25,6 +24,10 @@ export default function Document() {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
         />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        ></link>
       </Head>
       <body id="homepage">
         <div id="wrapper">

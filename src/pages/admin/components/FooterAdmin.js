@@ -1,25 +1,14 @@
-import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 
-const MyButton = React.forwardRef(({ href, name }, ref) => {
+const FooterAdmin = () => {
   return (
-    <a href={href} ref={ref}>
-      {name}
-    </a>
-  );
-});
-
-MyButton.displayName = "MyButton";
-
-const Footer = ({ disable }) => {
-  return (
-    <footer className={disable ? "" : "d-none"}>
+    <footer>
       <div className="container">
         <div className="row">
           <div className="col-lg-3 mb-5">
             <img
-              src="../../assets/images/yanuzun.png"
-              width={200}
+              src="/assets/images/logouzun.png"
               className="logo-small img-fluid"
               alt="Prekast Ev Logo"
             />
@@ -42,12 +31,8 @@ const Footer = ({ disable }) => {
                 </span>
                 <span>
                   <strong>Email:</strong>
-                  <Link
-                    href="mailto:satis@prekastev.com"
-                    passHref
-                    legacyBehavior
-                  >
-                    <MyButton name={"satis@prekastev.com"} />
+                  <Link href="mailto:satis@prekastev.com">
+                    satis@prekastev.com
                   </Link>
                 </span>
               </address>
@@ -59,24 +44,16 @@ const Footer = ({ disable }) => {
               <h3>HİZMETLERİMİZ</h3>
               <ul>
                 <li>
-                  <Link href="/services.html" passHref legacyBehavior>
-                    <MyButton name={"Arsa Keşfi"} />
-                  </Link>
+                  <Link href="/services">Arsa Keşfi</Link>
                 </li>
                 <li>
-                  <Link href="/services.html" passHref legacyBehavior>
-                    <MyButton name={"Ruhsat Projeleri"} />
-                  </Link>
+                  <Link href="/services">Ruhsat Projeleri</Link>
                 </li>
                 <li>
-                  <Link href="/services.html" passHref legacyBehavior>
-                    <MyButton name={"Elektrik Ve Otomasyon"} />
-                  </Link>
+                  <Link href="/services">Elektrik Ve Otomasyon</Link>
                 </li>
                 <li>
-                  <Link href="/services.html" passHref legacyBehavior>
-                    <MyButton name={"Tüm Hizmetlerimiz"} />
-                  </Link>
+                  <Link href="/services">Tüm Hizmetlerimiz</Link>
                 </li>
               </ul>
             </div>
@@ -84,7 +61,7 @@ const Footer = ({ disable }) => {
 
           <div className="col-lg-3">
             <img
-              src="../../assets/images/tescil/tescil.png"
+              src="/assets/images/tescil/tescil.png"
               className="img-fluid"
               alt="Tescil"
               style={{ maxWidth: "150px", height: "auto" }}
@@ -100,32 +77,28 @@ const Footer = ({ disable }) => {
               &copy; Copyright {new Date().getFullYear()} - Prekastev Yiğit
               Yüceer Proje Yönetimi Markasıdır
             </div>
-
             <div className="col-md-6 text-right">
               <div className="social-icons">
-                <a href="https://www.instagram.com/prekastev/">
+                <Link href="https://www.instagram.com/prekastev/">
                   <i className="fa-brands fa-instagram"></i>
-                </a>
-                <a href="https://www.youtube.com/@YIGITYUCEER">
+                </Link>
+                <Link href="https://www.youtube.com/@YIGITYUCEER">
                   <i className="fa-brands fa-youtube"></i>
-                </a>
-                <a href="https://www.linkedin.com/in/yigityuceer/">
+                </Link>
+                <Link href="https://www.linkedin.com/in/yigityuceer/">
                   <i className="fa-brands fa-linkedin"></i>
-                </a>
-                <a href="https://linktr.ee/yigityuceer">
-                  <i className="fa fa-external-link" aria-hidden="true"></i>
-                </a>
-                <a href="https://web.telegram.org/a/#506009257">
-                  <i className="fa-brands fa-telegram"></i>
-                </a>
+                </Link>
+                <Link href="https://linktr.ee/yigityuceer">
+                  <i className="fa-brands fa-dribbble"></i>
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <a href="#" id="back-to-top"></a>
+      <Link href="#" id="back-to-top"></Link>
     </footer>
   );
 };
 
-export default Footer;
+export default FooterAdmin;

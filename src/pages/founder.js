@@ -5,8 +5,10 @@ import api from "@/services/api";
 import { useEffect, useState } from "react";
 import VideoModal from "@/components/founder/VideoModal"; // Modal bileşeni için doğru yolu ekleyin
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Founder() {
+  const router = useRouter();
   const [founder, setFounder] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,6 +24,23 @@ export default function Founder() {
 
     fetchFounder();
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isFirstLoad = sessionStorage.getItem("isFirstLoad") !== "false";
+
+      if (isFirstLoad) {
+        sessionStorage.setItem("isFirstLoad", "false");
+
+        const timer = setTimeout(() => {
+          console.log("5 saniye oldu sayfa yenilendi");
+          router.reload();
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [router]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -93,6 +112,38 @@ export default function Founder() {
                 </Link>
               </div>
             </div>
+            <div className="row  offset-lg-6 offset-md-12 mt-5 mb-5">
+              <div className="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2 text-center">
+                <a href="https://yigityuceer.com">
+                  <i className="bi bi-link-45deg fs-5"></i>
+                </a>
+              </div>
+              <div className="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2 text-center">
+                <a href="https://www.instagram.com/muhyigityuceer">
+                  <i className="bi bi-instagram"></i>
+                </a>
+              </div>
+              <div className="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2 text-center">
+                <a href="https://www.youtube.com/@YIGITYUCEER">
+                  <i className="bi bi-youtube"></i>
+                </a>
+              </div>
+              <div className="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2 text-center">
+                <a href="https://x.com/MuhYigitYuceer">
+                  <i className="bi bi-twitter-x"></i>
+                </a>
+              </div>
+              <div className="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2 text-center">
+                <a href="https://www.tiktok.com/@yigityuceeryy">
+                  <i className="bi bi-tiktok"></i>
+                </a>
+              </div>
+              <div className="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2 text-center">
+                <a href="https://www.facebook.com/yigityuceer/">
+                  <i className="bi bi-facebook"></i>
+                </a>
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -102,7 +153,6 @@ export default function Founder() {
 
       {/* Script dosyalarını ekliyoruz */}
       <Script src="/assets/js/plugins.js" strategy="lazyOnload" />
-      <Script src="/assets/js/loader.js" strategy="lazyOnload" />
       <Script src="/assets/js/designesia.js" strategy="lazyOnload" />
       <Script src="/assets/js/menu.js" strategy="lazyOnload" />
       <Script
