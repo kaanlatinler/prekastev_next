@@ -1,108 +1,114 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/services/api";
-import { useRouter } from "next/router";
+import { CldUploadWidget } from "next-cloudinary";
 
-const UpdateForm = ({ model, token }) => {
-  const router = useRouter();
-  const [title, setTitle] = useState(""); // Set initial state from model
-  const [area, setArea] = useState("");
-  const [gfGrossArea, setGfGrossArea] = useState("");
-  const [gfTerrace, setGfGTerrace] = useState("");
-  const [gfPool, setGfPool] = useState("");
-  const [ffGrossArea, setFfGrossArea] = useState("");
-  const [ffTerrace, setFfTerrace] = useState("");
-  const [roomCount, setRoomCount] = useState("");
-  const [mainPicture, setMainPicture] = useState("");
-  const [filter, setFilter] = useState("");
-  const [images, setImages] = useState([]);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deletingImageId, setDeletingImageId] = useState(null);
-
+const UpdateForm = ({ model = {}, token }) => {
+  // Varsayılan değerlerle state'leri başlat
+  const [formData, setFormData] = useState({
+    title: "",
+    area: "",
+    groundFloorGrossArea: "",
+    groundFloorTerrace: "",
+    groundFloorPool: "",
+    firstFloorGrossArea: "",
+    firstFloorTerrace: "",
+    roomCount: "",
+    filter: "",
+    mainPicture: "",
+    images: [],
+  });
   const [alert, setAlert] = useState("");
   const [alertType, setAlertType] = useState(false);
 
+  // Model prop'u değiştiğinde form verilerini güncelle
   useEffect(() => {
-    setImages(model.Images);
-  }, []);
+    if (model && Object.keys(model).length > 0) {
+      setFormData({
+        title: model.title || "",
+        area: model.area || "",
+        groundFloorGrossArea: model.groundFloorGrossArea || "",
+        groundFloorTerrace: model.groundFloorTerrace || "",
+        groundFloorPool: model.groundFloorPool || "",
+        firstFloorGrossArea: model.firstFloorGrossArea || "",
+        firstFloorTerrace: model.firstFloorTerrace || "",
+        roomCount: model.roomCount || "",
+        filter: model.filter || "",
+        mainPicture: model.mainPicture || "",
+        images: model.Images || [],
+      });
+    }
+  }, [model]);
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
+  const handleMainUpload = (data) => {
+    if (data && data.event === "success") {
+      setFormData((prev) => ({
+        ...prev,
+        mainPicture: data.info.secure_url,
+      }));
+    }
+  };
+
+  const handleImagesUpload = (data) => {
+    if (data && data.event === "success") {
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, data.info.secure_url],
+      }));
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setAlert("");
+
+    if (!model || !model.id) {
+      setAlert("Model ID bulunamadı");
+      setAlertType(false);
+      return;
+    }
 
     try {
       const response = await api.put(
-        `/portfoilos/updateModel/${model.id}`,
-        {
-          title,
-          area,
-          groundFloorGrossArea: gfGrossArea, // Use correct state variable
-          groundFloorTerrace: gfTerrace,
-          groundFloorPool: gfPool,
-          firstFloorGrossArea: ffGrossArea,
-          firstFloorTerrace: ffTerrace,
-          roomCount,
-          mainPicture,
-          filter,
-          images,
-        },
+        `/portfoilos/updatePortfoilo/${model.id}`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
 
       if (response.data.success) {
-        setAlert("Kayıt başarılı");
+        setAlert("Model başarıyla güncellendi");
         setAlertType(true);
       } else {
-        setAlert("Kayıt başarısız");
+        setAlert("Model güncelleme başarısız");
         setAlertType(false);
       }
     } catch (err) {
-      console.log(err);
-      setAlert("Something went wrong");
+      console.error(err);
+      setAlert("Bir hata oluştu");
       setAlertType(false);
     }
   };
 
-  const handleImageDelete = async (imageId) => {
-    if (isDeleting) return; // Eğer silme işlemi devam ediyorsa, yeni istek atma
-
-    setIsDeleting(true);
-    setDeletingImageId(imageId);
-    setAlert("");
-
-    try {
-      const response = await api.delete(`/portfoilos/deleteImage/${imageId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        timeout: 10000, // 10 saniye timeout ekle
-      });
-
-      if (response.data.success) {
-        // UI'dan resmi hemen kaldır
-        setImages((prevImages) =>
-          prevImages.filter((img) => img.id !== imageId)
-        );
-        setAlert("Resim başarıyla silindi");
-        setAlertType(true);
-      } else {
-        throw new Error("Sunucu silme işlemini reddetti");
-      }
-    } catch (err) {
-      console.error("Resim silme hatası:", err);
-      setAlert(
-        err.response?.data?.message || "Resim silinirken bir hata oluştu"
-      );
-      setAlertType(false);
-    } finally {
-      setIsDeleting(false);
-      setDeletingImageId(null);
-    }
-  };
+  // Eğer token yoksa veya geçersizse, bir hata mesajı göster
+  if (!token) {
+    return (
+      <div className="alert alert-danger">
+        Oturum bilgisi bulunamadı. Lütfen tekrar giriş yapın.
+      </div>
+    );
+  }
 
   return (
     <div className="card mb-0">
@@ -110,181 +116,100 @@ const UpdateForm = ({ model, token }) => {
         <p className="text-center text-white fs-4 pt-5">Model Güncelle</p>
         <form onSubmit={handleSubmit}>
           <div className="row">
-            <div className="col-xxl-6 col-lg-6 col-md-6">
-              <div className="form-group mt-3">
+            <div className="col-md-6 col-lg-6 col-xxl-6">
+              {/* Ana Resim bölümü */}
+              <div className="mb-3">
                 <label htmlFor="mainPicture" className="form-label text-white">
                   Ana Resim
                 </label>
-                <input
-                  type="file"
-                  className="form-control"
-                  id="mainPicture"
-                  onChange={(e) => setMainPicture(e.target.files[0])} // Use files[0] for the first file
-                />
-                <div className="col-lg-4 mt-5">
-                  <div className="card text-white">
+                <div className="mb-4">
+                  <CldUploadWidget
+                    uploadPreset="myuploadpreset"
+                    onSuccess={handleMainUpload}
+                  >
+                    {({ open }) => (
+                      <button
+                        type="button"
+                        className="btn btn-primary rounded-2 text-white fs-5"
+                        onClick={() => open()}
+                      >
+                        Ana Resmi Seçmek İçin Tıklayın
+                      </button>
+                    )}
+                  </CldUploadWidget>
+                </div>
+                {formData.mainPicture && (
+                  <img
+                    src={formData.mainPicture}
+                    alt="Ana Resim"
+                    className="rounded-2"
+                    style={{ width: "50%", marginTop: "30px" }}
+                  />
+                )}
+              </div>
+
+              {/* Diğer Resimler bölümü */}
+              <div className="mb-3">
+                <label htmlFor="images" className="form-label text-white">
+                  Diğer Resimler
+                </label>
+                <div className="mb-3">
+                  <CldUploadWidget
+                    uploadPreset="myuploadpreset"
+                    onSuccess={handleImagesUpload}
+                  >
+                    {({ open }) => (
+                      <button
+                        type="button"
+                        className="btn btn-primary rounded-2 text-white fs-5"
+                        onClick={() => open()}
+                      >
+                        Diğer Resimleri Seçmek İçin Tıklayın
+                      </button>
+                    )}
+                  </CldUploadWidget>
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                  {formData.images.map((img, index) => (
                     <img
-                      src={model.mainPicture}
-                      className="card-img-top"
-                      alt="Main"
+                      key={index}
+                      src={typeof img === "string" ? img : img.url}
+                      alt={`Diğer Resim ${index + 1}`}
+                      className="rounded-2"
+                      style={{ width: "calc(50% - 10px)", marginTop: "30px" }}
                     />
-                  </div>
+                  ))}
                 </div>
               </div>
-              <div className="form-group mt-3">
-                <label htmlFor="images" className="form-label text-white">
-                  Resimler
-                </label>
-                <input
-                  type="file"
-                  className="form-control"
-                  id="images"
-                  multiple
-                  onChange={(e) => setImages(Array.from(e.target.files))} // Convert file list to array
-                />
-              </div>
-              <div className="row">
-                {images &&
-                  images.map((img, index) => (
-                    <div key={index} className="col-lg-4 col-md-6 mt-3">
-                      <div className="card text-white">
-                        <img
-                          src={`${img.url}`}
-                          className="card-img-top"
-                          alt={`Image ${index}`}
-                        />
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between">
-                            <button
-                              type="button"
-                              className="btn btn-outline-danger btn-lg"
-                              onClick={() => handleImageDelete(img.id)}
-                              disabled={
-                                isDeleting && deletingImageId === img.id
-                              }
-                            >
-                              {isDeleting && deletingImageId === img.id
-                                ? "Siliniyor..."
-                                : "Sil"}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
             </div>
-            <div className="col-xxl-6 col-lg-6 col-md-6">
-              <div className="form-group mt-3">
-                <label htmlFor="title" className="form-label text-white">
-                  Başlık
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="title"
-                  value={model.title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="area" className="form-label text-white">
-                  Alan
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="area"
-                  value={model.area}
-                  onChange={(e) => setArea(e.target.value)}
-                />
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="gfGrossArea" className="form-label text-white">
-                  Zemin Kat Brüt Alan
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="gfGrossArea"
-                  value={model.groundFloorGrossArea}
-                  onChange={(e) => setGfGrossArea(e.target.value)}
-                />
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="gfTerrace" className="form-label text-white">
-                  Zemin Kat Teras
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="gfTerrace"
-                  value={model.groundFloorTerrace}
-                  onChange={(e) => setGfGTerrace(e.target.value)}
-                />
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="gfPool" className="form-label text-white">
-                  Havuz
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="gfPool"
-                  value={model.groundFloorPool}
-                  onChange={(e) => setGfPool(e.target.value)}
-                />
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="ffGrossArea" className="form-label text-white">
-                  1.Kat Brüt Alan
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="ffGrossArea"
-                  value={model.firstFloorGrossArea}
-                  onChange={(e) => setFfGrossArea(e.target.value)}
-                />
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="ffTerrace" className="form-label text-white">
-                  1.Kat Teras
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="ffTerrace"
-                  value={model.firstFloorTerrace}
-                  onChange={(e) => setFfTerrace(e.target.value)}
-                />
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="roomCount" className="form-label text-white">
-                  Oda Sayısı
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="roomCount"
-                  value={model.roomCount}
-                  onChange={(e) => setRoomCount(e.target.value)}
-                />
-              </div>
-              <div className="form-group mt-3 mb-3">
-                <label htmlFor="filter" className="form-label text-white">
-                  Filtre (anasayfadaki bölüm için)
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="filter"
-                  value={model.filter}
-                  onChange={(e) => setFilter(e.target.value)}
-                />
-              </div>
+
+            <div className="col-md-6 col-lg-6 col-xxl-6">
+              {/* Form alanları */}
+              {Object.entries(formData).map(([key, value]) => {
+                if (key !== "mainPicture" && key !== "images") {
+                  return (
+                    <div className="mb-3" key={key}>
+                      <label htmlFor={key} className="form-label text-white">
+                        {key.charAt(0).toUpperCase() +
+                          key.slice(1).replace(/([A-Z])/g, " $1")}
+                      </label>
+                      <input
+                        className="form-control"
+                        id={key}
+                        type={typeof value === "number" ? "number" : "text"}
+                        value={value}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  );
+                }
+                return null;
+              })}
+
+              {/* Butonlar */}
               <div
-                className="btn-group btn-group-lg  d-flex"
+                className="btn-group btn-group-lg d-flex"
                 role="group"
                 aria-label="Large button group"
               >
@@ -297,18 +222,17 @@ const UpdateForm = ({ model, token }) => {
                 <Link
                   href="/admin/models"
                   className="btn btn-danger fs-4 rounded-2"
-                  type="button"
                 >
                   Geri Dön
                 </Link>
               </div>
+
+              {/* Alert mesajı */}
               {alert && (
                 <div
-                  className={
-                    alertType
-                      ? "alert alert-primary mt-3"
-                      : "alert alert-danger mt-3"
-                  }
+                  className={`alert ${
+                    alertType ? "alert-primary" : "alert-danger"
+                  } mt-5`}
                 >
                   {alert}
                 </div>

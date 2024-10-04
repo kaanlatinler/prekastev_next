@@ -28,17 +28,24 @@ const Subheader = ({ title, subtitle, link }) => {
               {subtitle.length > 0 ? (
                 <>
                   <li>
-                    <Link href={`/${link}.html`} passHref legacyBehavior>
-                      <MyButton name={title} />
-                    </Link>
+                    {link === "#" ? (
+                      <Link href={`#`} passHref legacyBehavior>
+                        <MyButton name={title} />
+                      </Link>
+                    ) : (
+                      <Link href={`/${link}.html`} passHref legacyBehavior>
+                        <MyButton name={title} />
+                      </Link>
+                    )}
                   </li>
                   <li className="sep">/</li>
                   <li>{subtitle}</li>
                 </>
               ) : (
-                ""
+                <>
+                  <li>{title}</li>
+                </>
               )}
-              <li>{title}</li>
             </ul>
           </div>
         </div>

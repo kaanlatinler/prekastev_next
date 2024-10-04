@@ -1,3 +1,5 @@
+import React from "react";
+
 const HouseModel_col2 = ({ model }) => {
   const title1 = model.title.split(" ")[0];
   const title2 = model.title.split(" ")[1];

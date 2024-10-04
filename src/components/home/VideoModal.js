@@ -72,4 +72,6 @@ const VideoModal = forwardRef(({ isOpen, onClose }, ref) => {
   );
 });
 
+VideoModal.displayName = "VideoModal";
+
 export default VideoModal;

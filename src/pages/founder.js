@@ -1,16 +1,23 @@
-import Subheader from "@/components/Subheader";
 import Head from "next/head";
-import Script from "next/script";
 import api from "@/services/api";
 import { useEffect, useState } from "react";
-import VideoModal from "@/components/founder/VideoModal"; // Modal bileşeni için doğru yolu ekleyin
 import Link from "next/link";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+
+const Subheader = dynamic(() => import("@/components/Subheader"), {
+  loading: () => <p>Loading Subheader...</p>,
+});
+
+const VideoModal = dynamic(() => import("@/components/home/VideoModal"), {
+  loading: () => <p>Loading VideoModal...</p>,
+});
 
 export default function Founder() {
   const router = useRouter();
   const [founder, setFounder] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchFounder() {
@@ -19,28 +26,13 @@ export default function Founder() {
         setFounder(response.data.founders);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchFounder();
   }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isFirstLoad = sessionStorage.getItem("isFirstLoad") !== "false";
-
-      if (isFirstLoad) {
-        sessionStorage.setItem("isFirstLoad", "false");
-
-        const timer = setTimeout(() => {
-          console.log("5 saniye oldu sayfa yenilendi");
-          router.reload();
-        }, 1000);
-
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [router]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -49,6 +41,10 @@ export default function Founder() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  if (loading) {
+    return <p>Loading content...</p>;
+  }
 
   return (
     <>
@@ -150,21 +146,6 @@ export default function Founder() {
 
       {/* Modal Bileşeni */}
       <VideoModal isOpen={isModalOpen} onClose={closeModal} />
-
-      {/* Script dosyalarını ekliyoruz */}
-      <Script src="/assets/js/plugins.js" strategy="lazyOnload" />
-      <Script src="/assets/js/designesia.js" strategy="lazyOnload" />
-      <Script src="/assets/js/menu.js" strategy="lazyOnload" />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.plugins.min.js"
-        strategy="lazyOnload"
-      />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.revolution.min.js"
-        strategy="lazyOnload"
-      />
-      <Script src="/assets/js/cookies.js" strategy="lazyOnload" />
-      <Script src="/assets/js/rev-slider.js" strategy="lazyOnload" />
     </>
   );
 }

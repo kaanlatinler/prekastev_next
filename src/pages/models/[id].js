@@ -145,20 +145,7 @@ export default function Models({ data, models }) {
       </div>
 
       {/* Script dosyalarını ekliyoruz */}
-      <Script src="/assets/js/plugins.js" strategy="lazyOnload" />
-      <Script src="/assets/js/loader.js" strategy="lazyOnload" />
-      <Script src="/assets/js/designesia.js" strategy="lazyOnload" />
-      <Script src="/assets/js/menu.js" strategy="lazyOnload" />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.plugins.min.js"
-        strategy="lazyOnload"
-      />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.revolution.min.js"
-        strategy="lazyOnload"
-      />
-      <Script src="/assets/js/cookies.js" strategy="lazyOnload" />
-      <Script src="/assets/js/rev-slider.js" strategy="lazyOnload" />
+      <Script src="/assets/js/rev-slider.js" strategy="afterInteractive" />
     </>
   );
 }

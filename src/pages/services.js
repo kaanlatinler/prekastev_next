@@ -1,9 +1,7 @@
 import Head from "next/head";
-import Script from "next/script";
 import api from "@/services/api";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 
 const Subheader = dynamic(() => import("@/components/Subheader"), {
   loading: () => <p>Loading Subheader...</p>,
@@ -14,8 +12,8 @@ const ServiceCard = dynamic(() => import("@/components/service/ServiceCard"), {
 });
 
 export default function Services() {
-  const router = useRouter();
   const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchServices() {
@@ -24,28 +22,17 @@ export default function Services() {
         setServices(response.data.services);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchServices();
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isFirstLoad = sessionStorage.getItem("isFirstLoad") !== "false";
-
-      if (!loading && isFirstLoad) {
-        sessionStorage.setItem("isFirstLoad", "false");
-
-        const timer = setTimeout(() => {
-          console.log("5 saniye oldu sayfa yenilendi");
-          router.reload();
-        }, 1000);
-
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [loading, router]);
+  if (loading) {
+    return <p>Loading content...</p>;
+  }
 
   return (
     <>
@@ -87,22 +74,6 @@ export default function Services() {
           </div>
         </div>
       </div>
-
-      {/* Script dosyalarını ekliyoruz */}
-      <Script src="/assets/js/plugins.js" strategy="lazyOnload" />
-      <Script src="/assets/js/loader.js" strategy="lazyOnload" />
-      <Script src="/assets/js/designesia.js" strategy="lazyOnload" />
-      <Script src="/assets/js/menu.js" strategy="lazyOnload" />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.plugins.min.js"
-        strategy="lazyOnload"
-      />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.revolution.min.js"
-        strategy="lazyOnload"
-      />
-      <Script src="/assets/js/cookies.js" strategy="lazyOnload" />
-      <Script src="/assets/js/rev-slider.js" strategy="lazyOnload" />
     </>
   );
 }

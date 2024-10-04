@@ -1,9 +1,7 @@
 import Head from "next/head";
-import Script from "next/script";
 import dynamic from "next/dynamic";
 import api from "@/services/api";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 
 const Subheader = dynamic(() => import("@/components/Subheader"), {
   loading: () => <p>Loading Subheader...</p>,
@@ -24,7 +22,6 @@ const HouseModelCol2 = dynamic(
 );
 
 export default function Models() {
-  const router = useRouter();
   const [models, setModels] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,23 +39,6 @@ export default function Models() {
 
     fetchModels();
   }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isFirstLoad = sessionStorage.getItem("isFirstLoad") !== "false";
-
-      if (!loading && isFirstLoad) {
-        sessionStorage.setItem("isFirstLoad", "false");
-
-        const timer = setTimeout(() => {
-          console.log("5 saniye oldu sayfa yenilendi");
-          router.reload();
-        }, 1000);
-
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [loading, router]);
 
   if (loading) {
     return <p>Loading content...</p>;
@@ -105,22 +85,6 @@ export default function Models() {
           </div>
         </div>
       </div>
-
-      {/* Script dosyalarını ekliyoruz */}
-      <Script src="/assets/js/plugins.js" strategy="lazyOnload" />
-      <Script src="/assets/js/loader.js" strategy="lazyOnload" />
-      <Script src="/assets/js/designesia.js" strategy="lazyOnload" />
-      <Script src="/assets/js/menu.js" strategy="lazyOnload" />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.plugins.min.js"
-        strategy="lazyOnload"
-      />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.revolution.min.js"
-        strategy="lazyOnload"
-      />
-      <Script src="/assets/js/cookies.js" strategy="lazyOnload" />
-      <Script src="/assets/js/rev-slider.js" strategy="lazyOnload" />
     </>
   );
 }

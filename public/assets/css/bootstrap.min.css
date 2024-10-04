@@ -7,6 +7,13 @@
  */
 :root,
 [data-bs-theme=light] {
+    --bs-custom-list-group-color: #fff;
+    --bs-custom-list-group-bg: #18191b;
+    --bs-custom-list-group-border-color: #FAB702;
+    --bs-custom-list-group-action-hover-color: #18191b;
+    --bs-custom-list-group-action-hover-bg: #FAB702;
+    --bs-custom-list-group-action-active-color: #18191b;
+    --bs-custom-list-group-action-active-bg: #FAB702;
     --bs-blue: #0d6efd;
     --bs-indigo: #6610f2;
     --bs-purple: #6f42c1;
@@ -6050,13 +6057,13 @@ fieldset:disabled .btn {
 }
 
 .list-group-item-dark {
-    --bs-list-group-color: var(--bs-dark-text-emphasis);
-    --bs-list-group-bg: var(--bs-dark-bg-subtle);
-    --bs-list-group-border-color: var(--bs-dark-border-subtle);
-    --bs-list-group-action-hover-color: var(--bs-emphasis-color);
-    --bs-list-group-action-hover-bg: var(--bs-dark-border-subtle);
-    --bs-list-group-action-active-color: var(--bs-emphasis-color);
-    --bs-list-group-action-active-bg: var(--bs-dark-border-subtle);
+    --bs-list-group-color: var(--bs-custom-list-group-color);
+    --bs-list-group-bg: var(--bs-custom-list-group-bg);
+    --bs-list-group-border-color: var(--bs-custom-list-group-border-color);
+    --bs-list-group-action-hover-color: var(--bs-custom-list-group-action-hover-color);
+    --bs-list-group-action-hover-bg: var(--bs-custom-list-group-action-hover-bg);
+    --bs-list-group-action-active-color: var(--bs-custom-list-group-action-active-color);
+    --bs-list-group-action-active-bg: var(--bs-custom-list-group-action-active-bg);
     --bs-list-group-active-color: var(--bs-dark-bg-subtle);
     --bs-list-group-active-bg: var(--bs-dark-text-emphasis);
     --bs-list-group-active-border-color: var(--bs-dark-text-emphasis)

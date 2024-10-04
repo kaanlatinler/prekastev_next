@@ -1,6 +1,5 @@
 const ModelDetails = ({ isOpen, onClose, model }) => {
   if (!isOpen) return null; // Modal açık değilse hiçbir şey render etme
-  console.log(model);
   return (
     <div
       className={`modal fade ${isOpen ? "show" : ""}`}

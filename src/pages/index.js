@@ -1,10 +1,9 @@
 import Head from "next/head";
-import Script from "next/script";
 import dynamic from "next/dynamic";
 import api from "@/services/api";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import VideoModal from "@/components/home/VideoModal";
+import Script from "next/script";
 
 // Slider, About, Steps ve Portfoilo bileşenlerini dinamik olarak yüklüyoruz
 const Slider = dynamic(() => import("@/components/home/Slider"), {
@@ -21,8 +20,6 @@ const Portfoilo = dynamic(() => import("@/components/home/Portfoilo"), {
 });
 
 export default function Home() {
-  const router = useRouter();
-
   const [sliders, setSliders] = useState([]);
   const [abouts, setAbouts] = useState([]);
   const [steps, setSteps] = useState([]);
@@ -48,28 +45,17 @@ export default function Home() {
         setLoading(false);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isFirstLoad = sessionStorage.getItem("isFirstLoad") !== "false";
-
-      if (!loading && isFirstLoad) {
-        sessionStorage.setItem("isFirstLoad", "false");
-
-        const timer = setTimeout(() => {
-          console.log("5 saniye oldu sayfa yenilendi");
-          router.reload();
-        }, 1000);
-
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [loading, router]);
+  if (loading) {
+    return <p>Loading content...</p>;
+  }
 
   return (
     <>
@@ -109,22 +95,7 @@ export default function Home() {
           />
         </>
       </div>
-
-      {/* Script dosyalarını ekliyoruz */}
-      <Script src="/assets/js/plugins.js" strategy="lazyOnload" />
-      <Script src="/assets/js/designesia.js" strategy="lazyOnload" />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.plugins.min.js"
-        strategy="lazyOnload"
-      />
-      <Script
-        src="/assets/rs-plugin/js/jquery.themepunch.revolution.min.js"
-        strategy="lazyOnload"
-      />
-
-      <Script src="/assets/js/cookies.js" strategy="lazyOnload" />
-      <Script src="/assets/js/rev-slider.js" strategy="lazyOnload" />
-      <Script src="/assets/js/menu.js" strategy="lazyOnload" />
+      <Script src="/assets/js/rev-slider.js" strategy="afterInteractive" />
     </>
   );
 }

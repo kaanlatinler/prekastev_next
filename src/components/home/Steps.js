@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 const Steps = ({ steps }) => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState(0); // Aktif sekmeyi tutar
 
-  const handleTabClick = (index) => {
+  const handleTabClick = (index, sId) => {
     setActiveTab(index); // Tıklanan sekmeyi aktif olarak ayarlar
+    router.push(`/steps/${sId}`); // Tıklanan sekmeye göre sayfayı yönlendirir
   };
 
   return (
@@ -29,7 +32,7 @@ const Steps = ({ steps }) => {
                   <li
                     key={index}
                     className={activeTab === index ? "active" : ""} // Aktif sekmeye göre class ekler
-                    onClick={() => handleTabClick(index)} // Sekmeye tıklandığında set eder
+                    onClick={() => handleTabClick(index, step.id)} // Sekmeye tıklandığında set eder
                   >
                     <span>{step.title}</span>{" "}
                     {/* Sekme başlıklarını gösterir */}

@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 
 export default function Document() {
   return (
@@ -34,6 +35,19 @@ export default function Document() {
           <Main />
           <NextScript />
         </div>
+        {/* Script dosyalarını ekliyoruz */}
+        <Script src="/assets/js/plugins.js" strategy="beforeInteractive" />
+        <Script src="/assets/js/designesia.js" strategy="beforeInteractive" />
+        <Script
+          src="/assets/rs-plugin/js/jquery.themepunch.plugins.min.js"
+          strategy="beforeInteractive"
+        />
+        <Script
+          src="/assets/rs-plugin/js/jquery.themepunch.revolution.min.js"
+          strategy="beforeInteractive"
+        />
+        <Script src="/assets/js/cookies.js" strategy="beforeInteractive" />
+        <Script src="/assets/js/menu.js" strategy="beforeInteractive" />
       </body>
     </Html>
   );
