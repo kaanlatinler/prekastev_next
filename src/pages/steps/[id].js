@@ -37,7 +37,7 @@ export default function Steps({ data, steps }) {
 
   const handleModelClick = (stepId) => {
     setSelectedStepId(stepId);
-    router.push(`/steps/${stepId}`);
+    router.push(`/steps/${stepId}.html`);
   };
 
   if (router.isFallback) {

@@ -1,16 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import api from "@/services/api";
+
 const Form = ({ models }) => {
   const [formData, setFormData] = useState({
     propertyType: "MODEL A",
     areaSize: "",
     unitSize: "sqft",
-    budget: "Bütçe Dostu",
     name: "",
     email: "",
     phone: "",
     message: "",
+    city: "", // İli buraya kaydediyoruz
   });
+
+  const [cities, setCities] = useState([]);
+
+  // API'den illeri almak için useEffect kullanıyoruz
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await axios.get(
+          "https://turkiyeapi.dev/api/v1/provinces"
+        );
+        setCities(response.data.data); // API'den gelen illeri setCities ile güncelliyoruz
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
+    };
+
+    fetchCities();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -30,7 +50,6 @@ const Form = ({ models }) => {
       });
 
       if (res.data.success) {
-        // modal alert bişey çıkacak
         alert("Form successfully submitted!");
       } else {
         alert("Failed to submit form");
@@ -56,9 +75,9 @@ const Form = ({ models }) => {
                 <div key={index} className="radio-img">
                   <input
                     id={model.id}
-                    name="propertyType" // Aynı name değeri
+                    name="propertyType"
                     type="radio"
-                    value={model.title} // model.title'ı value olarak kullanıyoruz
+                    value={model.title}
                     checked={formData.propertyType === model.title}
                     onChange={handleChange}
                   />
@@ -79,7 +98,7 @@ const Form = ({ models }) => {
           <div className="col-md-6 mb10">
             <h4>
               <i className="fa fa-arrows-alt id-color"></i>
-              Toplam alan büyüklüğünü girin
+              Toplam alan büyüklüğünü girin (m²)
             </h4>
             <div className="row">
               <div className="col-md-12">
@@ -99,18 +118,21 @@ const Form = ({ models }) => {
 
           <div className="col-md-6">
             <h4>
-              <i className="fa fa-tag id-color"></i>Bir bütçe belirtin
+              <i className="fa fa-tag id-color"></i>Şehir
             </h4>
             <select
-              name="budget"
-              id="budget"
+              name="city"
+              id="city"
               className="form-control"
-              value={formData.budget}
+              value={formData.city}
               onChange={handleChange}
             >
-              <option value="Bütçe Dostu">Bütçe Dostu</option>
-              <option value="Orta Seviye">Orta Seviye</option>
-              <option value="Yüksek Seviye">Yüksek Seviye</option>
+              <option value="">Bir il seçin</option>
+              {cities.map((city) => (
+                <option key={city.id} value={city.name}>
+                  {city.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>

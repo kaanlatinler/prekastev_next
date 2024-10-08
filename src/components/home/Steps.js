@@ -7,7 +7,7 @@ const Steps = ({ steps }) => {
 
   const handleTabClick = (index, sId) => {
     setActiveTab(index); // Tıklanan sekmeyi aktif olarak ayarlar
-    router.push(`/steps/${sId}`); // Tıklanan sekmeye göre sayfayı yönlendirir
+    router.push(`/steps/${sId}.html`); // Tıklanan sekmeye göre sayfayı yönlendirir
   };
 
   return (
