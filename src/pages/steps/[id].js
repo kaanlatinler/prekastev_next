@@ -100,6 +100,8 @@ export default function Steps({ data, steps }) {
       </div>
 
       {/* Script dosyalarını ekliyoruz */}
+      <Script src="/assets/js/designesia.js" strategy="afterInteractive" />
+
       <Script src="/assets/js/rev-slider.js" strategy="afterInteractive" />
     </>
   );

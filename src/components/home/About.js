@@ -33,13 +33,18 @@ const About = ({ abouts }) => {
                 }`}</span>
                 {`${index === 0 ? " Beton Evler" : ""}`}
               </h3>
-              <p>{about.message}</p>
-              <div className={`${index === 1 ? "py-2 my-1" : ""}`}></div>
-              <div className={`${index === 2 ? "py-5 my-1" : ""}`}></div>
+              {about.message}
+              <div
+                className={`${
+                  index === 0 ? "spacer-single mt-5 py-3" : "spacer-single"
+                }`}
+              ></div>
               <Link className="image-popup-no-margins" href={about.image}>
                 <img
                   src={about.image}
-                  className="img-responsive mt-2 pt-1"
+                  className={`${
+                    index === 0 ? "img-responsive mt-2 pt-1" : "img-responsive"
+                  }`}
                   alt={about.image}
                 />
               </Link>

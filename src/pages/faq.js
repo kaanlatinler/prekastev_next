@@ -3,6 +3,7 @@ import api from "@/services/api";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Script from "next/script";
 
 const Subheader = dynamic(() => import("@/components/Subheader"), {
   loading: () => <p>Loading Subheader...</p>,
@@ -85,9 +86,9 @@ export default function Faq() {
         <QuestionRow_black faqs={faqs} />
         <QuestionRow_gray faqs={faqs} />
         <QuestionRow_black2 faqs={faqs} />
-
         <More />
       </div>
+      <Script src="/assets/js/expand.js" strategy="afterInteractive" />
     </>
   );
 }

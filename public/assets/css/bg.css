@@ -70,7 +70,7 @@
 #section-steps {
 	background: url(../images/background/img1_gray.jpg) top fixed;
 	background-repeat: no-repeat;
-	object-fit: fill;
+	background-size: cover;
 }
 
 #section-steps-2 {

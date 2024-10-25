@@ -2,28 +2,28 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import api from "@/services/api";
 
-const Form = ({ models }) => {
+const Form = () => {
   const [formData, setFormData] = useState({
-    propertyType: "MODEL A",
     areaSize: "",
-    unitSize: "sqft",
     name: "",
     email: "",
     phone: "",
     message: "",
-    city: "", // İli buraya kaydediyoruz
+    city: "", // Şehir
+    heardFrom: "", // Nereden Duydu?
+    floors: "", // Kaç Katlı?
+    startDate: "", // Başlama Tarihi
   });
 
   const [cities, setCities] = useState([]);
 
-  // API'den illeri almak için useEffect kullanıyoruz
   useEffect(() => {
     const fetchCities = async () => {
       try {
         const response = await axios.get(
           "https://turkiyeapi.dev/api/v1/provinces"
         );
-        setCities(response.data.data); // API'den gelen illeri setCities ile güncelliyoruz
+        setCities(response.data.data);
       } catch (error) {
         console.error("Error fetching cities:", error);
       }
@@ -42,21 +42,36 @@ const Form = ({ models }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const translatedFormData = {
+      ...formData,
+      heardFrom:
+        formData.heardFrom === "SosyalMedya" ? "Sosyal Medya" : "Sosyal Çevre",
+      floors: formData.floors === "1" ? "1 Katlı" : "2 Katlı",
+      startDate:
+        formData.startDate === "w1"
+          ? "1 Ay İçinde"
+          : formData.startDate === "w6"
+          ? "6 Ay İçinde"
+          : formData.startDate === "after6"
+          ? "6 Ay Sonrasında"
+          : "Diğer",
+    };
+
     try {
-      const res = await api.post("/contacts/sendMail", formData, {
+      const res = await api.post("/contacts/sendMail", translatedFormData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
 
       if (res.data.success) {
-        alert("Form successfully submitted!");
+        alert("Form başarıyla gönderildi!");
       } else {
-        alert("Failed to submit form");
+        alert("Form gönderilemedi");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("There was an error submitting the form");
+      alert("Form gönderilirken bir hata oluştu");
     }
   };
 
@@ -64,35 +79,24 @@ const Form = ({ models }) => {
     <div className="col-md-8">
       <form id="contact_form" onSubmit={handleSubmit}>
         <div id="step-1" className="row">
-          <div className="col-md-12 mb30">
+          <div className="col-md-6 mb10">
             <h4>
-              <i className="fa fa-home id-color"></i> Seçtiğiniz mülk tipi
-              nedir?
+              <i className="fa-solid fa-question id-color"></i> Bizi Nereden
+              Duydunuz?
             </h4>
-
-            <div className="de_form de_radio">
-              {models.map((model, index) => (
-                <div key={index} className="radio-img">
-                  <input
-                    id={model.id}
-                    name="propertyType"
-                    type="radio"
-                    value={model.title}
-                    checked={formData.propertyType === model.title}
-                    onChange={handleChange}
-                  />
-                  <label htmlFor={model.id}>
-                    <img
-                      src={model.mainPicture}
-                      alt={model.title}
-                      width={100}
-                      height={100}
-                    />
-                    {model.title}
-                  </label>
-                </div>
-              ))}
-            </div>
+            <select
+              name="heardFrom"
+              id="heardFrom"
+              className="form-control"
+              value={formData.heardFrom}
+              onChange={handleChange}
+            >
+              <option value="" disabled>
+                Bir seçenek seçin
+              </option>
+              <option value="SosyalMedya">Sosyal Medya</option>
+              <option value="SosyalCevre">Sosyal Çevre</option>
+            </select>
           </div>
 
           <div className="col-md-6 mb10">
@@ -133,6 +137,47 @@ const Form = ({ models }) => {
                   {city.name}
                 </option>
               ))}
+            </select>
+          </div>
+
+          <div className="col-md-3 mb10">
+            <h4>
+              <i className="fa fa-home id-color"></i> Kaç Katlı Olacak?
+            </h4>
+
+            <select
+              name="floors"
+              id="floors"
+              className="form-control"
+              value={formData.floors}
+              onChange={handleChange}
+            >
+              <option value="" disabled>
+                Bir seçenek seçin
+              </option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+          </div>
+          <div className="col-md-3 mb10">
+            <h4>
+              <i className="fa fa-home id-color"></i> Başlama Tarihi?
+            </h4>
+
+            <select
+              name="startDate"
+              id="startDate"
+              className="form-control"
+              value={formData.startDate}
+              onChange={handleChange}
+            >
+              <option value="" disabled>
+                Bir seçenek seçin
+              </option>
+              <option value="w1">1 Ay İçinde</option>
+              <option value="w6">6 Ay İçinde</option>
+              <option value="after6">6 Ay Sonrasında</option>
+              <option value="other">Diğer</option>
             </select>
           </div>
         </div>

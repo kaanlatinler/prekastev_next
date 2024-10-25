@@ -10,10 +10,10 @@ export default function Document() {
           rel="stylesheet"
           id="bootstrap"
         />
-        <link href="/assets/css/plugins.css" rel="stylesheet" />
-        <link href="/assets/css/style.css" rel="stylesheet" />
-        <link href="/assets/css/color.css" rel="stylesheet" />
-        <link rel="stylesheet" href="/assets/css/bg.css" />
+        <link href="/assets/css/plugins.css" rel="stylesheet" type="text/css" />
+        <link href="/assets/css/style.css" rel="stylesheet" type="text/css" />
+        <link href="/assets/css/color.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/assets/css/bg.css" type="text/css" />
         <link
           rel="stylesheet"
           href="/assets/css/colors/yellow.css"

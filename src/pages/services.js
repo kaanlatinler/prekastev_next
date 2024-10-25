@@ -2,6 +2,7 @@ import Head from "next/head";
 import api from "@/services/api";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import Script from "next/script";
 
 const Subheader = dynamic(() => import("@/components/Subheader"), {
   loading: () => <p>Loading Subheader...</p>,
@@ -74,6 +75,8 @@ export default function Services() {
           </div>
         </div>
       </div>
+      <Script src="/assets/js/designesia.js" strategy="afterInteractive" />
+
     </>
   );
 }

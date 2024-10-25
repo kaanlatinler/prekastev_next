@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
+import Script from "next/script";
 
 const Subheader = dynamic(() => import("@/components/Subheader"), {
   loading: () => <p>Loading Subheader...</p>,
@@ -146,6 +147,8 @@ export default function Founder() {
 
       {/* Modal Bileşeni */}
       <VideoModal isOpen={isModalOpen} onClose={closeModal} />
+      <Script src="/assets/js/designesia.js" strategy="afterInteractive" />
+
     </>
   );
 }

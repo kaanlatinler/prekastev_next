@@ -3,11 +3,10 @@ import { useRouter } from "next/router";
 
 const Steps = ({ steps }) => {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState(0); // Aktif sekmeyi tutar
+  const [activeTab, setActiveTab] = useState(null); // Aktif sekmeyi tutar
 
   const handleTabClick = (index, sId) => {
-    setActiveTab(index); // Tıklanan sekmeyi aktif olarak ayarlar
-    router.push(`/steps/${sId}.html`); // Tıklanan sekmeye göre sayfayı yönlendirir
+    router.push(`/steps/${sId}`); // Tıklanan sekmeye göre sayfayı yönlendirir
   };
 
   return (

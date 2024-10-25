@@ -3,6 +3,7 @@ import api from "@/services/api";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import Script from "next/script";
 
 const Subheader = dynamic(() => import("@/components/Subheader"), {
   loading: () => <p>Loading Subheader...</p>,
@@ -21,28 +22,6 @@ const Map = dynamic(() => import("@/components/contact/Map"), {
 });
 
 export default function Contact() {
-  const router = useRouter();
-  const [models, setModels] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchModels() {
-      try {
-        const response = await api.get("/portfoilos/getPortfoilos");
-        setModels(response.data.portfoilos);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchModels();
-  }, []);
-
-  if (loading) {
-    return <p>Loading content...</p>;
-  }
 
   return (
     <>
@@ -72,11 +51,13 @@ export default function Contact() {
         <Map />
         <div className="container">
           <div className="row">
-            <Form models={models} />
+            <Form />
             <Sidebar />
           </div>
         </div>
       </div>
+      <Script src="/assets/js/designesia.js" strategy="afterInteractive" />
+
     </>
   );
 }
