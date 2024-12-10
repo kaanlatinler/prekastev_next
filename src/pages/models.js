@@ -87,7 +87,6 @@ export default function Models() {
         </div>
       </div>
       <Script src="/assets/js/designesia.js" strategy="afterInteractive" />
-
     </>
   );
 }

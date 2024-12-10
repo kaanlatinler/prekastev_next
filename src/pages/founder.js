@@ -32,6 +32,8 @@ export default function Founder() {
       }
     }
 
+    
+
     fetchFounder();
   }, []);
 
@@ -148,7 +150,6 @@ export default function Founder() {
       {/* Modal Bileşeni */}
       <VideoModal isOpen={isModalOpen} onClose={closeModal} />
       <Script src="/assets/js/designesia.js" strategy="afterInteractive" />
-
     </>
   );
 }

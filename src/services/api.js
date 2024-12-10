@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://www.kaanlatinler.online/api";
+const baseURL = "https://kaanlatinler.com/api/";
 
 const api = axios.create({
   baseURL,

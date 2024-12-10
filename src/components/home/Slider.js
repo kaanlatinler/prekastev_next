@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 const Slider = ({ sliders }) => {
   return (
@@ -17,6 +18,7 @@ const Slider = ({ sliders }) => {
                 data-masterspeed="200"
                 data-thumb=""
               >
+                {/* Resimlere gri filtre ekliyoruz */}
                 <img src={slider.image} alt="" />
                 <div
                   className="tp-caption big-white sft"
@@ -42,6 +44,21 @@ const Slider = ({ sliders }) => {
                   data-endspeed="400"
                 >
                   {slider.title}
+                </div>
+                <div
+                  className="tp-caption sfb"
+                  data-x="center"
+                  data-y="335"
+                  data-speed="1000"
+                  data-start="800"
+                  data-easing="easeInOutExpo"
+                >
+                  <Link href="/contact.html" className="btn-slider">
+                    Şimdi Hayalindeki Evin Fiyatını Öğren
+                  </Link>
+                  <p className="text-white fw-bold ps-5 fs-5 mt-4">
+                    Biz Sizi Arayalım
+                  </p>
                 </div>
               </li>
             ))}

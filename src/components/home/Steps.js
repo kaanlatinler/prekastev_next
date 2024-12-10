@@ -13,7 +13,7 @@ const Steps = ({ steps }) => {
     <section id="section-steps" className="jarallax text-light">
       <div className="container">
         <div className="row">
-          <div className="col-md-6 offset-md-3 text-center wow fadeInUp">
+          <div className="col-md-6 col-12 offset-md-3 text-center wow fadeInUp">
             <h1>Yapım Aşamaları</h1>
             <div className="separator">
               <span>

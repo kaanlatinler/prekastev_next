@@ -4,6 +4,7 @@ import api from "@/services/api";
 import { useEffect, useState } from "react";
 import VideoModal from "@/components/home/VideoModal";
 import Script from "next/script";
+// import Contractor from "@/components/home/Contractor";
 
 // Slider, About, Steps ve Portfoilo bileşenlerini dinamik olarak yüklüyoruz
 const Slider = dynamic(() => import("@/components/home/Slider"), {
@@ -83,6 +84,7 @@ export default function Home() {
 
       <div id="content" className="no-bottom no-top">
         <>
+          {/* <Contractor /> */}
           <Slider sliders={sliders} />
           <About abouts={abouts} />
           <Steps steps={steps} />
